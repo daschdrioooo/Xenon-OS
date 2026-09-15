@@ -24,7 +24,7 @@ html, body{
     object-fit: contain;
     background-color: black;
     border-radius: 9999px;
-    border: 8px solid white;
+    border: 6px solid white;
     margin-bottom:10px;
 }
 
@@ -32,7 +32,7 @@ html, body{
     overflow: hidden;
     background-color: rgb(68, 68, 68);
     height: 0.5%;
-    aspect-ratio: 24/1;
+    aspect-ratio: 24/0.5;
     margin-top: 24px;
     border-radius: 9999px;
 }
