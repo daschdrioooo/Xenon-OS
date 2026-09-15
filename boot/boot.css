@@ -25,13 +25,13 @@ html, body{
     background-color: black;
     border-radius: 9999px;
     border: 8px solid white;
+    margin-bottom:10px;
 }
 
 #outerLoadingBar{
     overflow: hidden;
-    border: solid white 2px;
     background-color: rgb(68, 68, 68);
-    height: 1%;
+    height: 0.5%;
     aspect-ratio: 24/1;
     margin-top: 24px;
     border-radius: 9999px;
