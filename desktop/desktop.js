@@ -5,28 +5,28 @@ const MENUS=[
         icon:'circle',
         className:'menu-btn',
         items:[
-            {label:'About This Computer',action:()=>alert('clickedatc')},
+            {label:'About This Computer',icon:'laptop',action:()=>alert('clickedatc')},
         ],
     },
     {
         label:'Manager',
         className:'app-name',
         items:[
-            {label:'About',action:()=>alert('clickedmanager')},
+            {label:'About',icon:'layout-grid',action:()=>alert('clickedmanager')},
         ],
     },
     {
         label:'Menu1',
         className:'menu-label',
         items:[
-            {label:'Button1',action:()=>alert('clickedmenu1')},
+            {label:'Button1',icon:'app-window',action:()=>alert('clickedmenu1')},
         ],
     },
     {
         label:'Menu2',
         className:'menu-label',
         items:[
-            {label:'Button2',action:()=>alert('clickedmenu2')},
+            {label:'Button2',icon:'app-window',action:()=>alert('clickedmenu2')},
         ],
     },
 ];
@@ -73,9 +73,17 @@ function openMenu(index,btn) {
         const item=document.createElement('div');
         item.className='item'+(entry.disabled?' disabled':'');
         item.setAttribute('role','menuitem');
+        const left=document.createElement('span');
+        left.className='item-left';
+        if (entry.icon) {
+            const icon=document.createElement('i');
+            icon.setAttribute('data-lucide',entry.icon);
+            left.appendChild(icon);
+        }
         const label=document.createElement('span');
         label.textContent=entry.label;
-        item.appendChild(label);
+        left.appendChild(label);
+        item.appendChild(left);
         if (entry.shortcut) {
             const sc=document.createElement('span');
             sc.className='shortcut';
@@ -89,20 +97,27 @@ function openMenu(index,btn) {
         });
         dropdown.appendChild(item);
     });
+    lucide.createIcons();
     dropdown.classList.remove('open');
     void dropdown.offsetWidth;
     dropdown.classList.add('open');
     const rect=btn.getBoundingClientRect();
-    const maxLeft=window.innerWidth-dropdown.offset-6;
+    const maxLeft=window.innerWidth-dropdown.offsetWidth-6;
     dropdown.style.left=Math.max(6,Math.min(rect.left,maxLeft))+'px';
     openIndex=index;
 }
 
 function closeMenu() {
-    dropdown.classList.remove('open');
     clearActive();
     openIndex=null;
+    if (!dropdown.classList.contains('open')) return;
+    dropdown.classList.remove('open');
+    dropdown.classList.add('closing');
 }
+
+dropdown.addEventListener('animationend',(e)=>{
+    if (e.animationName==='menu-out') dropdown.classList.remove('closing');
+});
 
 function clearActive() {
     menubarLeft.querySelectorAll('button').forEach((b)=>{
@@ -131,4 +146,4 @@ updateClock();
 setInterval(updateClock,1000);
 
 renderMenubar();
-if (window.lucide) lucide.createIcons();
+lucide.createIcons();
