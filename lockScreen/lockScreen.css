@@ -3,8 +3,9 @@
 }
 
 *{
-    font-family: 'inter';
+    font-family: 'Inter';
     color: white;
+    box-sizing:border-box;
 }
 
 #lockScreen{
@@ -16,64 +17,102 @@
     background-color: black;
     align-items: center;
     background-image: var(--wallpaper);
+    background-position:center;
+    transition:transform 0.4s cubic-bezier(0.65,0,0.35,1);
+}
+
+#lockScreen.unlocked {
+    transform:translateY(-100%);
 }
 
 html, body{
     height: 100%;
-    margin: 0;
+    margin:0;
+    overflow:hidden;
+    background:black;
 }
 
 #topStuff{
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    padding-top:10vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
 }
 
 #bottomStuff{
-    padding: 40px;
+    padding: 12vh;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 #date{
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.7);
-    padding-bottom: 0px;
-    margin-bottom: -12px;
-    font-weight: 600;
+    font-size:22px;
+    font-weight:600;
+    color:rgba(255,255,255,0.75);
+    margin-bottom:-14px;
+    text-shadow:0 1px 6px rgba(0,0,0,0.2);
 }
 
 #time{
-    font-size: 85px;
-    color: rgba(255, 255, 255, 0.7);
+    font-size: clamp(90px,14vw,140px);
+    letter-spacing:-0.03em;
+    color: rgba(255, 255, 255, 0.75);
+    text-shadow: 0 1px 6px rgba(0,0,0,0.15);
     font-weight: 700;
-    padding-top: 0px;
 }
 
 #userName{
-    padding-top: 20px;
+    padding-top: 8px;
     padding-bottom: 8px;
-    font-size: 13px;
+    font-size: 17px;
     font-weight: 600;
     text-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
-#enterPasscodePrompt{
-    padding-top: 8px;
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.7);
-    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+#passcode {
+    width:180px;
+    height:32px;
+    padding:0 14px;
+    border:none;
+    border-radius:999px;
+    background:rgba(255,255,255,0.18);
+    -webkit-backdrop-filter:blur(20px);
+    backdrop-filter:blur(20px);
+    font-size:14px;
+    text-align:center;
+    letter-spacing:0.2em;
+    outline:none;
+}
+
+#passcode::placeholder {
+    color:rgba(255,255,255,0.5);
+    letter-spacing:normal;
+}
+
+#passcode.shake {
+    animation:shake 0.4s ease;
+}
+
+@keyframes shake {
+    0%,100% {transform:translateX(0);}
+    20%,60% {transform:translateX(-8px);}
+    40%,80% {transform:translateX(8px);}
 }
 
 .avatar{
-    border-radius: 9999px;  
-    height: 38px;
-    aspect-ratio: 1/1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: -12px;
-    background-color: grey;
+    width:28px;
+    height: 28px;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:transparent;
 }
+
+/*dasch, the svg styling like i was saying that you can/should use on lucide icons :)*/
+.avatar svg {
+    width:28px;
+    height:28px;
+}
+

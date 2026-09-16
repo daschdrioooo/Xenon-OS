@@ -5,6 +5,12 @@
     --text:#fff;
     --letter-shadow:0 1px 2px rgba(0,0,0,0.35), 0 0 0.5px rgba(0,0,0,0.35);
     --icon-shadow:drop-shadow(0 1px 1.5px rgba(0,0,0,0.35));
+    --menu-bg:rgba(246,246,248,0.72);
+    --menu-text:#1d1d1f;
+    --menu-muted:rgba(29,29,31,0.42);
+    --menu-border:rgba(0,0,0,0.1);
+    --menu-sep:rgba(0,0,0,0.09);
+    --accent:#0a6cff;
 }
 
 * {
@@ -71,11 +77,11 @@ body {
     color:var(--text);
     text-shadow:var(--letter-shadow);
     white-space:nowrap;
-    transition:background-color 0.12 ease;
+    transition:background-color 0.12s ease;
 }
 
 .menubar button:hover,
-.menubar button:active {
+.menubar button.active {
     background:rgba(255,255,255,0.2);
 }
 
@@ -98,7 +104,7 @@ body {
 .menubar .menu-btn svg {
     width:14px;
     height:14px;
-    stroke-width:2.8p;
+    stroke-width:2.8;
 }
 
 .menubar .app-name {
