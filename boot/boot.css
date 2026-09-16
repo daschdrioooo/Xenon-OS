@@ -45,10 +45,10 @@ html, body{
 }
 
 @keyframes loadBar {
-  0% {
+    0% {
     width: 0%;
-  }
-  100% {
+    }
+    100% {
     width: 100%;
-  }
+    }
 }
