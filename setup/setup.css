@@ -1,0 +1,66 @@
+:root {
+    --wallpaper:url("https://misc-assets.raycast.com/wallpapers/blue_distortion_1_preview.png"),url("https://www.raycast.com/_next/image?url=https%3A%2F%2Fmisc-assets.raycast.com%2Fwallpapers%2Fblue_distortion_1_preview.png&w=3840&q=70");
+}
+
+*{
+    font-family: 'inter';
+}
+
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-image: var(--wallpaper);
+}
+
+#setupCard{
+    background-color: rgb(30, 30, 30);
+    border-radius: 16px;
+    padding: 40px;
+    width: 600px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+#back{
+    color: #5d9ffc;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 40px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+#earthIcon{
+    color: #5d9ffc;
+    height: auto;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 40px;
+    padding: 20px;
+}
+
+#earth{
+    width: 100%;
+    height: 100%;
+}
+
+#continueBtn{
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background: rgb(30, 30, 30);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 9999px;
+    cursor: pointer;
+    box-shadow: 0 20px 60px rgba(100, 100, 100, 0.5);
+}
