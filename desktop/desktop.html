@@ -16,11 +16,20 @@
                 <!--populated by js-->
             </div>
             <div class="menubar-right">
-                <button class="right-btn"><i data-lucide="search"></i></button>
+                <button class="right-btn" id="appsBtn"><i data-lucide="layout-grid"></i></button>
                 <button><i data-lucide="sliders-horizontal"></i></button>
                 <button class="clock" id="clock"></button>
             </div>
         </nav>
+        <div class="widgets" id="widgets"></div>
+        <div class="app-library" id="appLibrary" role="dialog">
+            <div class="app-search">
+                <i data-lucide="search"></i>
+                <input id="appSearch" type="text" placeholder="App Library" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="app-sep"></div>
+            <div class="app-list" id="appList"></div>
+        </div>
         <div class="dropdown" id="dropdown" role="menu"></div>
         <script src="desktop.js"></script>
     </body>
