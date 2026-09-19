@@ -347,6 +347,7 @@ function openWindow(app) {
     windows.set(app.name,win);
     focusWindow(win);
     lucide.createIcons();
+    syncDock();
     return win;
 }
 
@@ -365,6 +366,7 @@ function closeWindow(win) {
     win.addEventListener('animationend',(e)=>{
         if (e.animationName!=='window-out') return;
         win.remove();
+        syncDock();
         if (focused===win) {
             focused=null;
             focusTopWindow();
@@ -462,6 +464,130 @@ function startResize(e,win) {
     window.addEventListener('pointerup',up);
 }
 
+//dock
+const DOCK=[
+    {name:'app',icon:'layout-grid'},
+    '-',
+    {name:'Trash',icon:'trash-2'},
+]
+
+//claude helped me here
+const BASE=54;
+const LIMIT=BASE*6;
+
+const CURVE=[
+    [-LIMIT,BASE],
+    [-LIMIT/1.25,BASE*1.1],
+    [-LIMIT/2,BASE*1.414],
+    [0,BASE*2],//directly under the pointer
+    [LIMIT/2,BASE*1.414],
+    [LIMIT/1.25,BASE*1.1],
+    [LIMIT,BASE],
+];
+
+const STIFFNESS=0.16;
+const DAMPING=0.42;
+
+function sizeFor(distance) {
+    if (distance<=CURVE[0][0]||distance>=CURVE[CURVE.length-1][0]) return BASE;
+    for (let i=0;i<CURVE.length-1;i++) {
+       const [d1,s1]=CURVE[i];
+        const [d2,s2]=CURVE[i+1];
+        if (distance>=d1&&distance<=d2) {
+            const t=(distance-d1)/(d2-d1);
+            return s1+(s2-s1)*t;
+        } 
+    }
+    return BASE;
+}
+
+const dock=document.getElementById('dock');
+const dockTiles=[];
+let pointerX=null;
+let dockRaf=null;
+
+function renderDock() {
+    dock.innerHTML='';
+    dockTiles.length=0;
+    DOCK.forEach((app)=>{
+        if (app==='-') {
+            const sep=document.createElement('span');
+            sep.className='dock-sep';
+            dock.appendChild(sep);
+            return;
+        }
+        const item=document.createElement('button');
+        item.className='dock-item';
+        item.dataset.app=app.name;
+        item.innerHTML=`
+        <span class="tooltip">${app.name}</span>
+        <span class="dock-tile"><i data-lucide="${app.icon}"></i></span>
+        <span class="dot"></span>`;
+        item.addEventListener('click',()=>launch(app,item));
+        dock.appendChild(item);
+        dockTiles.push({el:item.querySelector('.dock-tile'),size:BASE,velocity:0,target:BASE});
+    });
+    syncDock();
+    lucide.createIcons();
+}
+
+function launch(app,item) {
+    const alreadyOpen=windows.has(app.name);
+    openWindow(app);
+    if (alreadyOpen) return;
+    item.classList.add('bounce');
+    item.addEventListener('animationend',()=>item.classList.remove('bounce'),{once:true});
+}
+
+function syncDock() {
+    dock.querySelectorAll('.dock-item').forEach((item)=>{
+        item.classList.toggle('running',windows.has(item.dataset.app));
+    });
+}
+
+function dockTick() {
+    let moving=false;
+    dockTiles.forEach((tile)=>{
+        if (pointerX===null) {
+            tile.target=BASE;
+        } else {
+            const rect=tile.el.getBoundingClientRect();
+            const centre=rect.left+rect.width/2;
+            tile.target=sizeFor(pointerX-centre);
+        }
+        tile.velocity+=(tile.target-tile.size)*STIFFNESS;
+        tile.velocity*=1-DAMPING;
+        tile.size+=tile.velocity;
+        if (Math.abs(tile.target-tile.size)<0.1&&Math.abs(tile.velocity)<0.1) {
+            tile.size=tile.target;
+            tile.velocity=0;
+        } else {
+            moving=true;
+        }
+        tile.el.style.width=tile.size+'px';
+        tile.el.style.height=tile.size+'px';
+    });
+    if (moving||pointerX!==null) dockRaf=requestAnimationFrame(dockTick);
+    else dockRaf=null;
+}
+
+function startDock() {
+    if (dockRaf===null) dockRaf=requestAnimationFrame(dockTick);
+}
+
+dock.addEventListener('pointermove',(e)=>{
+    pointerX=e.clientX;
+    startDock();
+});
+
+dock.addEventListener('pointerleave',()=>{
+    pointerX=null;
+    startDock();
+});
+
+dock.addEventListener('click',(e)=>e.stopPropagation());
+
+renderDock();
 renderMenubar();
 renderWidgets();
 loadWeather();
