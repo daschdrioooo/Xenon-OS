@@ -17,7 +17,9 @@
     background-color: black;
     align-items: center;
     background-image: var(--wallpaper);
-    background-position:center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     transition:transform 0.4s cubic-bezier(0.65,0,0.35,1);
 }
 
