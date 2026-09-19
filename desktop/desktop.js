@@ -56,6 +56,7 @@ function renderMenubar() {
         });
         menubarLeft.appendChild(btn);
     });
+    lucide.createIcons();
 }
 
 function openMenu(index,btn) {
@@ -221,7 +222,7 @@ async function loadWeather() {
 
 //app library stuff
 const APPS=[
-    {name:'app',icon:'layout-grid',action:()=>alert('no apps yet bro who do you think we are.')},
+    {name:'app',icon:'layout-grid'},
 ];
 
 const appsBtn=document.getElementById('appsBtn');
@@ -246,7 +247,8 @@ function renderApps(query='') {
         <span class="app-name-label">${app.name}</span>`;
         item.addEventListener('click',()=>{
             closeLibrary();
-            if (typeof app.action==='function') setTimeout(app.action,140);
+            if (typeof app.action==='function') app.action();
+            else openWindow(app);
         });
         appList.appendChild(item);
     });
@@ -292,6 +294,173 @@ appSearch.addEventListener('keydown',(e)=>{
 
 appsLibrary.addEventListener('click',(e)=>e.stopPropagation());
 window.addEventListener('resize',closeLibrary);
+
+//window system
+const MENUBAR_H=32;
+const windowLayer=document.getElementById('windowLayer');
+const windows=new Map();
+let zTop=1;
+let focused=null;
+
+function openWindow(app) {
+    //focus if app is already open
+    const existing=windows.get(app.name);
+    if (existing) {
+        existing.classList.remove('minimised');
+        focusWindow(existing);
+        return existing;
+    }
+    const win=document.createElement('section');
+    win.className='window opening';
+    win.dataset.app=app.name;
+    //dont OVERLAY LIKE MICROSOFT POODOWS, step down and right
+    const step=windows.size%6*26;
+    win.style.left=(120+step)+'px';
+    win.style.top=(MENUBAR_H+40+step)+'px';
+    win.style.width='560px';
+    win.style.height='360px';
+    win.innerHTML=`
+    <div class="titlebar">
+        <div class="traffic">   
+            <button class="tl-close"><i data-lucide="x"></i></button>
+            <button class="tl-min"><i data-lucide="minus"></i></button>
+            <button class="tl-zoom"><i data-lucide="plus"></i></button>
+        </div>
+        <div class="win-title">${app.name}</div>
+    </div>
+    <div class="win-body"></div>
+    <div class="win-resize"></div>`;
+    const titlebar=win.querySelector('.titlebar');
+    const traffic=win.querySelector('.traffic');
+    win.querySelector('.tl-close').addEventListener('click',(e)=>{e.stopPropagation();closeWindow(win);});
+    win.querySelector('.tl-min').addEventListener('click',(e)=>{e.stopPropagation();minimiseWindow(win);});
+    win.querySelector('.tl-zoom').addEventListener('click',(e)=>{e.stopPropagation();zoomWindow(win);});
+    traffic.addEventListener('pointerdown',(e)=>e.stopPropagation());
+    titlebar.addEventListener('pointerdown',(e)=>startDrag(e,win));
+    titlebar.addEventListener('dblclick',()=>zoomWindow(win));
+    win.querySelector('.win-resize').addEventListener('pointerdown',(e)=>startResize(e,win));
+    win.addEventListener('pointerdown',()=>focusWindow(win));
+    win.addEventListener('animationend',(e)=>{
+        if (e.animationName==='window-in') win.classList.remove('opening');
+    });
+    windowLayer.appendChild(win);
+    windows.set(app.name,win);
+    focusWindow(win);
+    lucide.createIcons();
+    return win;
+}
+
+function focusWindow(win) {
+    if (focused===win&&win.style.zIndex) return;
+    if (focused) focused.classList.remove('focused');
+    win.classList.add('focused');
+    win.style.zIndex=++zTop;
+    focused=win;
+    setMenubarApp(win.dataset.app);
+}
+
+function closeWindow(win) {
+    windows.delete(win.dataset.app);
+    win.classList.add('closing');
+    win.addEventListener('animationend',(e)=>{
+        if (e.animationName!=='window-out') return;
+        win.remove();
+        if (focused===win) {
+            focused=null;
+            focusTopWindow();
+        }
+    },{once:true});
+}
+
+function minimiseWindow(win) {
+    win.classList.add('minimised');
+    win.classList.remove('focused');
+    if (focused===win) {
+        focused=null;
+        focusTopWindow();
+    }
+}
+
+function zoomWindow(win) {
+    if (win.classList.contains('maximised')) {
+        const old=win.dataset.restore.split(',');
+        win.style.left=old[0];
+        win.style.top=old[1];
+        win.style.width=old[2];
+        win.style.height=old[3];
+        win.classList.remove('maximised');
+        return;
+    }
+    win.dataset.restore=[win.style.left,win.style.top,win.style.width,win.style.height].join(',');
+    win.style.left='0px';
+    win.style.top=MENUBAR_H+'px';
+    win.style.width='100%';
+    win.style.height=`calc(100% - ${MENUBAR_H}px)`;
+    win.classList.add('maximised');
+    focusWindow(win);
+}
+
+function focusTopWindow() {
+    let top=null;
+    windows.forEach((w)=>{
+        if (w.classList.contains('minimised')) return;
+        if (!top||Number(w.style.zIndex)>Number(top.style.zIndex)) top=w;
+    });
+    if (top) focusWindow(top);
+    else setMenubarApp('Manager');
+}
+
+function setMenubarApp(name) {
+    if (MENUS[1].label===name) return;
+    MENUS[1].label=name;
+    renderMenubar();
+}
+
+function startDrag(e,win) {
+    if (e.button!==0) return;
+    if (win.classList.contains('maximised')) return;
+    focusWindow(win);
+    const rect=win.getBoundingClientRect();
+    const grabX=e.clientX-rect.left;
+    const grabY=e.clientY-rect.top;
+    win.classList.add('dragging');
+    function move(ev) {
+        let x=ev.clientX-grabX;
+        let y=ev.clientY-grabY;
+        x=Math.min(Math.max(x,60-rect.width),window.innerWidth-60);
+        y=Math.min(Math.max(y,MENUBAR_H),window.innerHeight-38);
+        win.style.left=x+'px';
+        win.style.top=y+'px';
+    }
+    function up() {
+        win.classList.remove('dragging');
+        window.removeEventListener('pointermove',move);
+        window.removeEventListener('pointerup',up);
+    }
+    window.addEventListener('pointermove',move);
+    window.addEventListener('pointerup',up);
+}
+
+function startResize(e,win) {
+    if (e.button!==0) return;
+    e.stopPropagation();
+    focusWindow(win);
+    const rect=win.getBoundingClientRect();
+    const startX=e.clientX;
+    const startY=e.clientY;
+    win.classList.add('dragging');
+    function move(ev) {
+        win.style.width=Math.max(280,rect.width+ev.clientX-startX)+'px';
+        win.style.height=Math.max(120,rect.height+ev.clientY-startY)+'px';
+    }
+    function up() {
+        win.classList.remove('dragging');
+        window.removeEventListener('pointermove',move);
+        window.removeEventListener('pointerup',up);
+    }
+    window.addEventListener('pointermove',move);
+    window.addEventListener('pointerup',up);
+}
 
 renderMenubar();
 renderWidgets();
