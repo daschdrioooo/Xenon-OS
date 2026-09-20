@@ -16,7 +16,7 @@ Xenon-OS is a work in progress.
 
 **daschdrioooo.github.io/Xenon-OS/desktop/desktop.html**
 
-* **Setup** - Setup page with lucide icons, continue and back button, and password-setting
+* **Setup** - Setup page where you can set a username and password
 
 **daschdrioooo.github.io/Xenon-OS/setup/setup.html**
 
@@ -32,7 +32,14 @@ Xenon-OS is a work in progress.
 
 * **Repository link** - github.com/daschdriooo/Xenon-OS
 
+## Resources Used
+
+* **Lucide icons** - lucide.dev
+
 ## Screenshots
+
+### Setup Screen:
+![alt text](image.png)
 
 ### Lock Screen:
 ![alt text](image-1.png)
