@@ -1,1 +1,44 @@
 # Xenon-OS
+Xenon-OS is a web-based operating system based on MacOS. It's designed to be lightweight, easy to run and something you can use anywhere.
+Xenon-OS is a work in progress.
+
+## Progress
+### So far we've done:
+* **Lock Screen** - Password protection with a background image, date and time.
+
+**daschdrioooo.github.io/Xenon-OS/lockscreen/lockscreen.html**
+
+* **Boot Screen** - Animated loading screen that uses CSS Keyframe animation for the loading bar
+
+**daschdrioooo.github.io/Xenon-OS/boot/boot.html**
+
+* **Desktop** - Main Xenon-OS desktop, with menus, apps and more
+
+**daschdrioooo.github.io/Xenon-OS/desktop/desktop.html**
+
+* **Setup** - **INCOMPLETE** Setup page with lucide icons, continue and back button, and password-setting
+
+**daschdrioooo.github.io/Xenon-OS/setup/setup.html**
+
+## Contributors
+* **DaschDrioooo** (Mostly HTML, CSS) - he/him/his  - github.com/daschdrioooo
+* **Carbonicality** (Mostly JS, + some HTML and CSS) - he/him/his - github.com/carbonicality
+
+## Additional Info
+
+* **Site link** - daschdrioooo.github.io/Xenon-OS
+
+* **Default Password** (until setup page is finished) - 123456
+
+* **Repository link** - github.com/daschdriooo/Xenon-OS
+
+## Screenshots
+
+### Lock Screen:
+![alt text](image-1.png)
+
+### Boot Screen:
+![alt text](image-2.png)
+
+### Desktop:
+![alt text](image-3.png)
