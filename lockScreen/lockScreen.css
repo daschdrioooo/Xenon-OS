@@ -118,3 +118,19 @@ html, body{
     height:28px;
 }
 
+#passHint {
+    margin-top:10px;
+    min-height:16px;
+    max-width:240px;
+    font-size:12px;
+    line-height:1.35;
+    text-align:center;
+    color:rgba(255,255,255,0.7);
+    text-shadow:0 2px 8px rgba(0,0,0,0.3);
+    opacity:0;
+    transition:opacity 0.25s ease;
+}
+
+#passHint.show {
+    opacity:1;
+}

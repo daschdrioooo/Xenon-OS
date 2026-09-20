@@ -15,10 +15,14 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
-//temporary authentication functionality
-const PASSCODE='123456';
+//auth
+const account=JSON.parse(localStorage.getItem('xenon-account')||'null');
+if (!account) window.location.replace('../setup/setup.html');
 const lockScreen=document.getElementById('lockScreen');
 const passcodeInput=document.getElementById('passcode');
+const passHint=document.getElementById('passHint');
+let attempts=0;
+document.getElementById('userName').textContent=account?.name||'User';
 
 function switchState() {
     window.location.href='../desktop/desktop.html';
@@ -26,6 +30,7 @@ function switchState() {
 
 function unlock() {
     passcodeInput.disabled=true;
+    passHint.classList.remove('show');
     lockScreen.addEventListener('transitionend',(e)=>{
         if (e.propertyName==='transform') switchState();
     });
@@ -33,14 +38,19 @@ function unlock() {
 }
 
 function wrongPass() {
+    attempts++;
     passcodeInput.classList.remove('shake');
     void passcodeInput.offsetWidth;
     passcodeInput.classList.add('shake');
     setTimeout(()=>{passcodeInput.value=''},400);
+    if (attempts>=2) {
+        passHint.textContent=account.hint?'Hint: '+account.hint:'No hint was set.';
+        passHint.classList.add('show');
+    }
 }
 
 function checkPasscode() {
-    if (passcodeInput.value===PASSCODE) unlock();
+    if (passcodeInput.value===account.password) unlock();
     else wrongPass();
 }
 
