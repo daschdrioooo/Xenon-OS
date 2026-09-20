@@ -129,8 +129,8 @@ function clearActive() {
 }
 
 dropdown.addEventListener('click',(e)=>e.stopPropagation());
-document.addEventListener('click',()=>{closeMenu();closeLibrary();});
-document.addEventListener('keydown',(e)=>{if (e.key==="Escape"){closeMenu();closeLibrary();}});
+document.addEventListener('click',()=>{closeMenu();closeControlCentre();closeLibrary();});
+document.addEventListener('keydown',(e)=>{if (e.key==="Escape"){closeMenu();closeControlCentre();closeLibrary();}});
 window.addEventListener('resize',closeMenu);
 
 //clock
@@ -257,6 +257,7 @@ function renderApps(query='') {
 
 function openLibrary() {
     closeMenu();
+    closeControlCentre();
     appsLibrary.classList.remove('open','closing');
     void appsLibrary.offsetWidth;
     appsLibrary.classList.add('open');
@@ -587,6 +588,119 @@ dock.addEventListener('pointerleave',()=>{
 });
 
 dock.addEventListener('click',(e)=>e.stopPropagation());
+
+//control centre
+const CC_DEFAULTS={
+    brightness:100,
+    volume:60,
+};
+
+function ccLoad() {
+    try {
+        return {...CC_DEFAULTS,...JSON.parse(localStorage.getItem('xenon-control')||'{}')};
+    } catch (e) {
+        return {...CC_DEFAULTS};
+    }
+}
+
+function ccSave() {
+    localStorage.setItem('xenon-control',JSON.stringify(cc));
+}
+
+const cc=ccLoad();
+const ccBtn=document.getElementById('ccBtn');
+const controlCentre=document.getElementById('controlCentre');
+const veil=document.getElementById('brightness');
+const brightnessInput=document.getElementById('ccBrightness');
+const volumeInput=document.getElementById('ccVolume');
+const volIcon=document.getElementById('ccVolIcon');
+let ccOpen=false;
+
+function setFill(input,valueEl) {
+    const min=Number(input.min);
+    const max=Number(input.max);
+    const pct=(input.value-min)/(max-min)*100;
+    input.style.setProperty('--fill',pct+'%');
+    valueEl.textContent=input.value+'%';
+}
+
+function applyBrightness() {
+    veil.style.opacity=((100-cc.brightness)/100*0.8).toFixed(3);
+}
+
+function setVolumeIcon() {
+    const name=cc.volume===0?'volume-x':cc.volume<50?'volume-1':'volume-2';
+    if (volIcon.dataset.icon===name) return;
+    volIcon.dataset.icon=name;
+    volIcon.innerHTML=`<i data-lucide="${name}"></i>`;
+    lucide.createIcons();
+}
+
+brightnessInput.addEventListener('input',()=>{
+    cc.brightness=Number(brightnessInput.value);
+    setFill(brightnessInput,document,getElementById('ccBrightnessValue'));
+    applyBrightness();
+});
+
+volumeInput.addEventListener('input',()=>{
+    cc.volume=Number(volumeInput.value);
+    setFill(volumeInput,document.getElementById('ccVolumeValue'));
+    setVolumeIcon();
+});
+
+[brightnessInput,volumeInput].forEach((input)=>input.addEventListener('change',ccSave));
+
+let audioCtx=null;  
+volumeInput.addEventListener('change',()=>{
+    if (cc.volume===0) return;
+    try {
+        audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+        const osc=audioCtx.createOscillator();
+        const gain=audioCtx.createGain();
+        osc.frequency.value=660;
+        gain.gain.value=cc.volume/100*0.06;
+        osc.connect(gain).connect(audioCtx.destination);
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.0001,audioCtx.currentTime+0.12);
+        osc.stop(audioCtx.currentTime+0.13);
+    }catch(e) {}
+});
+
+function openControlCentre() {
+    closeMenu();
+    closeLibrary();
+    controlCentre.classList.remove('open','closing');
+    void controlCentre.offsetWidth;
+    controlCentre.classList.add('open');
+    controlCentre.classList.add('closing');
+}
+
+function closeControlCentre() {
+    ccBtn.classList.remove('active');
+    ccOpen=false;
+    if (!controlCentre.classList.contains('open')) return;
+    controlCentre.classList.remove('open');
+    controlCentre.classList.add('closing');
+}
+
+controlCentre.addEventListener('animationend',(e)=>{
+    if (e.animationName==='cc-out') controlCentre.classList.remove('closing');
+});
+
+ccBtn.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    ccOpen?closeControlCentre():openControlCentre();
+});
+
+controlCentre.addEventListener('click',(e)=>e.stopPropagation());
+window.addEventListener('resize',closeControlCentre);
+
+brightnessInput.value=cc.brightness;
+volumeInput.value=cc.volume;
+setFill(brightnessInput,document.getElementById('ccBrightnessValue'));
+setFill(volumeInput,document.getElementById('ccVolumeValue'));
+applyBrightness();
+setVolumeIcon();
 
 renderDock();
 renderMenubar();

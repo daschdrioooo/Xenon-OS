@@ -10,6 +10,8 @@ Xenon-OS is a work in progress.
 
 * **Boot Screen** - Animated loading screen that uses CSS Keyframe animation for the loading bar
 
+* **Authentication** - If you have not gone through a setup proceess and set up a password and username, you will be prompted to do so on first boot.
+
 **daschdrioooo.github.io/Xenon-OS/boot/boot.html**
 
 * **Desktop** - Main Xenon-OS desktop, with menus, apps (such as 'about') and more
@@ -27,8 +29,6 @@ Xenon-OS is a work in progress.
 ## Additional Info
 
 * **Site link** - daschdrioooo.github.io/Xenon-OS
-
-* **Default Password** (until setup page is finished) - 123456
 
 * **Repository link** - github.com/daschdriooo/Xenon-OS
 

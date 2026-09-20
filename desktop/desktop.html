@@ -17,7 +17,7 @@
             </div>
             <div class="menubar-right">
                 <button class="right-btn" id="appsBtn"><i data-lucide="layout-grid"></i></button>
-                <button><i data-lucide="sliders-horizontal"></i></button>
+                <button id="ccBtn"><i data-lucide="sliders-horizontal"></i></button>
                 <button class="clock" id="clock"></button>
             </div>
         </nav>
@@ -31,6 +31,29 @@
             </div>
             <div class="app-sep"></div>
             <div class="app-list" id="appList"></div>
+        </div>
+        <div id="brightness"></div>
+        <div id="controlCentre" role="dialog">
+            <div>
+                <div class="cc-label">
+                    <i data-lucide="sun"></i>
+                    <span>Brightness</span>
+                    <span class="cc-value" id="ccBrightnessValue"></span>
+                </div>
+                <div class="cc-slider">
+                    <input id="ccBrightness" type="range" min="25" max="100" step="1">
+                </div>
+            </div>
+            <div>
+                <div class="cc-label">
+                    <span id="ccVolIcon"><i data-lucide="volume-2"></i></span>
+                    <span>Volume</span>
+                    <span class="cc-value" id="ccVolumeValue"></span>
+                </div>
+                <div class="cc-slider">
+                    <input id="ccVolume" type="range" min="0" max="100" step="1">
+                </div>
+            </div>
         </div>
         <div class="dropdown" id="dropdown" role="menu"></div>
         <script src="desktop.js"></script>
