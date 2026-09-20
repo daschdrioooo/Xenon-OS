@@ -12,11 +12,11 @@ Xenon-OS is a work in progress.
 
 **daschdrioooo.github.io/Xenon-OS/boot/boot.html**
 
-* **Desktop** - Main Xenon-OS desktop, with menus, apps and more
+* **Desktop** - Main Xenon-OS desktop, with menus, apps (such as 'about') and more
 
 **daschdrioooo.github.io/Xenon-OS/desktop/desktop.html**
 
-* **Setup** - **INCOMPLETE** Setup page with lucide icons, continue and back button, and password-setting
+* **Setup** - Setup page with lucide icons, continue and back button, and password-setting
 
 **daschdrioooo.github.io/Xenon-OS/setup/setup.html**
 

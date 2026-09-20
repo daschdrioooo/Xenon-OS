@@ -1,0 +1,38 @@
+*{
+    font-family: inter;
+}
+
+#aboutXenon{
+    display: flex;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 24px;
+    text-align: center;
+}
+
+#deviceName{
+    margin-top: 50px;
+}
+
+.specRow{
+    display: grid;
+    grid-template-columns: 100px 100px;
+    justify-content: center;
+    gap: 12px;
+}
+
+.specLabel{
+    text-align: right;
+    font-weight: 650;
+}
+
+.specValue{
+    text-align: left;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+#repoLink{
+    color: rgb(94, 182, 255);
+}

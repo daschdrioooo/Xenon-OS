@@ -222,7 +222,7 @@ async function loadWeather() {
 
 //app library stuff
 const APPS=[
-    {name:'app',icon:'layout-grid'},
+    {name:'about',icon:'info'},
 ];
 
 const appsBtn=document.getElementById('appsBtn');
@@ -328,8 +328,9 @@ function openWindow(app) {
         </div>
         <div class="win-title">${app.name}</div>
     </div>
-    <div class="win-body"></div>
+    <iframe class="win-body" src="../apps/about.html"></iframe>
     <div class="win-resize"></div>`;
+    
     const titlebar=win.querySelector('.titlebar');
     const traffic=win.querySelector('.traffic');
     win.querySelector('.tl-close').addEventListener('click',(e)=>{e.stopPropagation();closeWindow(win);});
@@ -466,7 +467,7 @@ function startResize(e,win) {
 
 //dock
 const DOCK=[
-    {name:'app',icon:'layout-grid'},
+    {name:'about',icon:'info'},
     '-',
     {name:'Trash',icon:'trash-2'},
 ]
